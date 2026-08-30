@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#272457" />
+  <meta name="description" content="星星 AI 英语伙伴 H5 本地交互体验" />
+  <title>星星 AI 英语伙伴 · H5</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="sky" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <main class="app-shell">
+    <header class="app-header">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="m12 2.8 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z" fill="currentColor"/></svg>
+      </div>
+      <div class="brand-copy"><strong>星星 AI 英语伙伴</strong><small id="screenName">英语对话 · 中英文陪伴</small></div>
+      <div class="header-actions">
+        <button id="modelSettingsButton" class="icon-button" type="button" aria-label="打开 AI 模型中心" title="AI 模型中心" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <button id="resetButton" class="icon-button" type="button" aria-label="重新开始对话" title="重新开始对话">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="app-tabs" aria-label="星星学习空间">
+      <button type="button" data-screen-target="home" aria-current="page">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span>英语对话</span>
+      </button>
+      <button type="button" data-screen-target="map">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M5 19V7l7-4 7 4v12M8 19v-5h8v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>学习计划</span>
+      </button>
+      <button type="button" data-screen-target="report">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M5 20V9m7 11V4m7 16v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>我的成长</span>
+      </button>
+    </nav>
+
+    <div id="screenViewport" class="screen-viewport" tabindex="-1">
+
+    <section id="homeScreen" class="screen" aria-label="星星对话首页">
+      <section class="companion-card" aria-labelledby="page-title">
+        <div class="companion-row">
+          <div class="mascot" aria-label="英语伙伴星星">
+            <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
+              <path d="m60 8 14.2 28.8 31.8 4.6-23 22.4 5.4 31.7L60 80.5 31.6 95.5 37 63.8 14 41.4l31.8-4.6Z" fill="#FFE56F" stroke="#FFF8C2" stroke-width="4"/>
+              <circle cx="47" cy="57" r="3.5" fill="#46355F"/><circle cx="73" cy="57" r="3.5" fill="#46355F"/>
+              <path d="M51 68c6 6 12 6 18 0" fill="none" stroke="#46355F" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="hero-copy">
+            <span class="eyebrow">双语陪伴 · H5 体验版</span>
+            <h1 id="page-title">Hi，我是星星！</h1>
+            <p>开心、难过或想分享一件小事，都可以直接告诉我。星星会用简单英语和温柔中文陪你聊。</p>
+          </div>
+        </div>
+        <div id="aiStatus" class="ai-status" role="status" aria-live="polite">
+          <span class="status-dot"></span><strong>正在连接本地 AI 服务</strong><small id="voiceName">声音：默认女生 · 英文后中文</small>
+        </div>
+      </section>
+
+      <section class="chat-card" aria-labelledby="chat-title">
+        <div class="section-heading">
+          <div><span>STAR CHAT</span><h2 id="chat-title">英语对话与陪伴</h2></div><small>每一轮都能点击重听</small>
+        </div>
+        <div id="chatLog" class="chat-log" role="log" aria-live="polite" aria-label="和星星的对话记录"></div>
+        <div class="voice-capture" aria-labelledby="voiceTitle">
+          <button id="talkButton" class="talk-button" type="button">
+            <span class="talk-icon"><svg viewBox="0 0 24 24" width="25" height="25" aria-hidden="true"><rect x="8" y="3" width="8" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <span><strong id="talkLabel">点击开始语音录入</strong><small id="talkHint">录入时会实时显示文字，不会自动发送</small></span>
+          </button>
+          <div id="voiceRecording" class="voice-recording" hidden>
+            <div class="recording-status"><span></span><strong>正在录入 <b id="recordingTimer">00:00</b></strong></div>
+            <p id="liveTranscript">星星正在听，请开始说话……</p>
+            <button id="finishRecordingButton" type="button">录入完毕</button>
+          </div>
+          <div id="voiceReview" class="voice-review" hidden>
+            <label for="voiceTranscript" id="voiceTitle">我听到的是：</label>
+            <textarea id="voiceTranscript" rows="3" maxlength="160" placeholder="识别文字会显示在这里，也可以手动修改"></textarea>
+            <div class="voice-review-actions"><button id="retryVoiceButton" type="button">重新录入</button><button id="confirmVoiceButton" type="button">确认并发送</button></div>
+          </div>
+        </div>
+        <details class="text-fallback">
+          <summary>无法使用语音？改用文字告诉星星</summary>
+          <form id="composer" class="composer">
+            <label for="messageInput">输入想和星星说的话</label>
+            <div class="composer-row">
+              <input id="messageInput" name="message" type="text" maxlength="160" autocomplete="off" enterkeyhint="send" placeholder="例如：我今天有一点难过" />
+              <button id="sendButton" class="send-button" type="submit" aria-label="发送给星星" disabled>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m3 3 18 9-18 9 3-9-3-9Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 12h15" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+            </div>
+          </form>
+        </details>
+      </section>
+    </section>
+
+    <section id="levelPanel" class="hub-panel screen" hidden aria-labelledby="levelPanelTitle">
+      <div class="lesson-heading"><div><span>LEARNING HUB</span><h1 id="levelPanelTitle">今天想怎么学？</h1><p>先完成今日计划，也可以单独练习或进入挑战。</p></div></div>
+      <button id="dailyPlanButton" class="daily-plan-entry" type="button"><span><small>星星安排 · 工作日 10 分钟 / 周末 15 分钟</small><strong>生成并开始今日计划</strong><em>听、读、理解、背诵、单词和情景表达会按顺序出现</em></span><b>开始</b></button>
+      <section class="learning-entrances" aria-labelledby="learningEntrancesTitle">
+        <div class="learning-section-title"><span><strong id="learningEntrancesTitle">今日学习</strong><small>选择一个入口，进入独立任务页面</small></span></div>
+        <div class="learning-entry-grid">
+          <button type="button" data-learning-entry="plan"><span class="entry-badge">01</span><span><strong>今日任务</strong><small>按计划逐项完成</small></span></button>
+          <button type="button" data-learning-entry="reading"><span class="entry-badge">02</span><span><strong>朗读故事</strong><small>听读理解再背诵</small></span></button>
+          <button type="button" data-learning-entry="words"><span class="entry-badge">03</span><span><strong>认识单词</strong><small>听音、选择和开口</small></span></button>
+          <button type="button" data-learning-entry="roleplay"><span class="entry-badge">04</span><span><strong>情景演绎</strong><small>在故事里说英语</small></span></button>
+          <button type="button" data-learning-entry="challenge"><span class="entry-badge">CH</span><span><strong>今日挑战</strong><small data-challenge-entry-status>完成基础任务后解锁</small></span></button>
+        </div>
+      </section>
+      <div class="learning-section-title level-section-title"><span><strong>章节关卡</strong><small>沿着学习树逐关解锁</small></span></div>
+      <div id="levelMap" class="level-map" aria-label="英语章节关卡"></div>
+    </section>
+
+    <section id="taskScreen" class="screen" hidden aria-label="英语学习任务">
+      <section id="nextStep" class="next-step" hidden aria-labelledby="next-title">
+        <div><span>星星推荐的下一步</span><h1 id="next-title">准备开始学习</h1><p id="nextDescription"></p></div><button id="startLessonButton" type="button">开始这个任务</button>
+      </section>
+      <section id="lessonPanel" class="lesson-panel" hidden aria-labelledby="lessonTitle">
+        <div class="lesson-heading"><div><span>LEARN WITH STAR</span><h1 id="lessonTitle">小任务</h1></div><button id="closeLesson" type="button" class="text-button">返回关卡</button></div>
+        <div id="lessonContent" class="lesson-content"></div>
+      </section>
+    </section>
+
+    <section id="growthPanel" class="hub-panel screen" hidden aria-labelledby="growthPanelTitle">
+      <div class="lesson-heading"><div><span>MY GROWTH</span><h1 id="growthPanelTitle">我的英语成长</h1><p>看看我坚持了多久，又学会了什么。</p></div></div>
+      <div class="growth-strip" aria-label="今日成长概览">
+        <div class="growth-stat"><span>星光积分</span><strong><b id="pointsBalance">0</b> 分</strong></div>
+        <div class="growth-stat"><span>连续签到</span><strong><b id="streakCount">0</b> 天</strong></div>
+        <button id="checkInButton" class="check-in-button" type="button">今日签到 <span>+5</span></button>
+      </div>
+      <div class="report-tabs" role="tablist" aria-label="学习报告时间范围">
+        <button type="button" role="tab" aria-selected="true" data-summary-range="today">今日学习</button>
+        <button type="button" role="tab" aria-selected="false" data-summary-range="week">这周学习</button>
+        <button type="button" role="tab" aria-selected="false" data-summary-range="month">本月学习</button>
+      </div>
+      <div id="summaryCards" class="summary-cards" aria-live="polite">
+        <div><span>不同内容</span><strong id="summaryUnique">0</strong></div><div><span>练习次数</span><strong id="summaryAttempts">0</strong></div><div><span>重复练习</span><strong id="summaryRepeats">0</strong></div><div><span>获得积分</span><strong id="summaryPoints">0</strong></div>
+      </div>
+      <section class="study-detail" aria-labelledby="studyDetailTitle">
+        <div class="form-heading"><strong id="studyDetailTitle">今日学习内容</strong><small>掌握与积分只记一次；重复练习单独统计</small></div>
+        <div id="studyDetailList" class="study-detail-list"></div>
+      </section>
+    </section>
+
+    <p class="privacy-note">本地体验说明：原始录音不会上传；只有确认后的识别文字会交给 AI。请勿输入孩子的真实姓名、学校、电话或地址。</p>
+    </div>
+  </main>
+
+  <dialog id="modelSettingsDialog" class="model-dialog" aria-labelledby="modelDialogTitle">
+    <div class="model-dialog-shell">
+      <header class="model-dialog-header">
+        <div class="model-dialog-title">
+          <span class="model-title-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m8.5 12 2.2 2.2 4.8-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div><small>仅家长或测试者设置</small><h2 id="modelDialogTitle">AI 模型中心</h2></div>
+        </div>
+        <button id="closeModelSettings" class="model-close-button" type="button" aria-label="关闭 AI 模型中心">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="model-dialog-body">
+        <section class="model-security-note" aria-label="密钥安全说明">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 2.8 8.2 7 10 4.2-1.8 7-5.5 7-10V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <div><strong>Key 只保存在本机后端</strong><p>不会进入对话记录、浏览器存储、页面源码或 GitHub。孩子端始终只看到“星星”。</p></div>
+        </section>
+
+        <form id="modelSettingsForm" novalidate>
+          <section class="model-slot-card" data-model-slot="primary">
+            <div class="model-slot-heading">
+              <span class="model-slot-number">1</span>
+              <div><strong>主模型</strong><small>日常对话、课程计划和学习反馈优先使用</small></div>
+              <span class="model-slot-badge">必选</span>
+            </div>
+            <div class="model-fields">
+              <label for="primaryProvider">模型厂商</label>
+              <select id="primaryProvider" data-provider-select="primary"></select>
+              <div id="primaryProviderHint" class="provider-hint" data-provider-hint="primary"></div>
+
+              <label for="primaryModel">具体模型</label>
+              <select id="primaryModel" data-model-select="primary"></select>
+              <input id="primaryCustomModel" class="custom-model-input" data-custom-model="primary" type="text" maxlength="120" placeholder="填写模型 ID，例如 your-model-name" hidden />
+
+              <label for="primaryApiKey">API Key</label>
+              <div class="secret-input-row"><input id="primaryApiKey" data-api-key="primary" type="password" maxlength="500" autocomplete="new-password" spellcheck="false" placeholder="粘贴新的 API Key" /><button type="button" data-toggle-key="primary" aria-label="显示或隐藏主模型 API Key">显示</button></div>
+              <small class="field-help" data-key-status="primary">尚未保存 Key</small>
+
+              <details class="advanced-model-settings">
+                <summary>高级设置 · API 地址</summary>
+                <label for="primaryBaseUrl">Base URL</label>
+                <input id="primaryBaseUrl" data-base-url="primary" type="url" inputmode="url" autocomplete="url" />
+              </details>
+            </div>
+            <button class="test-model-button" data-test-model="primary" type="button">测试主模型连接</button>
+          </section>
+
+          <section class="model-slot-card fallback-slot" data-model-slot="fallback">
+            <div class="model-slot-heading">
+              <span class="model-slot-number">2</span>
+              <div><strong>备用模型</strong><small>主模型超时或报错时自动接替，不会绕过课程规则</small></div>
+              <label class="fallback-switch"><input id="fallbackEnabled" type="checkbox" /><span aria-hidden="true"></span><b>启用</b></label>
+            </div>
+            <div id="fallbackFields" class="model-fields" aria-disabled="true">
+              <label for="fallbackProvider">模型厂商</label>
+              <select id="fallbackProvider" data-provider-select="fallback" disabled></select>
+              <div id="fallbackProviderHint" class="provider-hint" data-provider-hint="fallback"></div>
+
+              <label for="fallbackModel">具体模型</label>
+              <select id="fallbackModel" data-model-select="fallback" disabled></select>
+              <input id="fallbackCustomModel" class="custom-model-input" data-custom-model="fallback" type="text" maxlength="120" placeholder="填写备用模型 ID" hidden disabled />
+
+              <label for="fallbackApiKey">API Key</label>
+              <div class="secret-input-row"><input id="fallbackApiKey" data-api-key="fallback" type="password" maxlength="500" autocomplete="new-password" spellcheck="false" placeholder="粘贴备用模型 API Key" disabled /><button type="button" data-toggle-key="fallback" aria-label="显示或隐藏备用模型 API Key" disabled>显示</button></div>
+              <small class="field-help" data-key-status="fallback">尚未保存 Key</small>
+
+              <details class="advanced-model-settings">
+                <summary>高级设置 · API 地址</summary>
+                <label for="fallbackBaseUrl">Base URL</label>
+                <input id="fallbackBaseUrl" data-base-url="fallback" type="url" inputmode="url" autocomplete="url" disabled />
+              </details>
+            </div>
+            <button class="test-model-button" data-test-model="fallback" type="button" disabled>测试备用模型连接</button>
+          </section>
+
+          <p id="modelFormStatus" class="model-form-status" role="status" aria-live="polite">选择厂商后会显示推荐模型；也可以填写最新模型 ID。</p>
+          <div class="model-dialog-actions">
+            <button id="cancelModelSettings" type="button">暂不设置</button>
+            <button id="saveModelSettings" type="submit">保存模型配置</button>
+          </div>
+          <p class="model-cost-note">连接测试会向所选厂商发送一句极短测试文字，可能产生极少量 Token 费用；正式使用费用由对应厂商收取。</p>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- LOCAL_TEST_CONTROL_START: 上线前删除整个 tester-dock 与 app.js 中 testAdvanceButton 逻辑 -->
+  <aside class="tester-dock" aria-label="本地验收工具">
+    <span>仅本地验收</span><button id="testAdvanceButton" type="button">万能推进键</button><small>只推进页面，不计完成与积分</small>
+  </aside>
+  <!-- LOCAL_TEST_CONTROL_END -->
+
+  <template id="starMessageTemplate">
+    <button class="message star-message" type="button">
+      <span class="message-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="m12 2.8 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z" fill="currentColor"/></svg></span>
+      <span class="message-main"><span class="message-meta"><strong>星星 AI</strong><small>点击重听</small></span><span class="message-text"></span></span>
+      <svg class="replay-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 4a5 5 0 0 1 0 6M18 6a9 9 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </template>
+  <script src="/app.js" defer></script>
+</body>
+</html>
